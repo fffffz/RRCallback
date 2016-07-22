@@ -5,7 +5,7 @@ import android.view.View;
 
 import org.icegeneral.rrcallbak.bean.User;
 import org.icegeneral.rrcallbak.retrofit.DX168API;
-import org.icegeneral.rrcallbak.retrofit.DX168Subscriber;
+import org.icegeneral.rrcallbak.rxjava.DX168Subscriber;
 import org.icegeneral.rrcallbak.rxjava.BindActivityOperator;
 import org.icegeneral.rrcallbak.rxjava.DX168Transformer;
 import org.icegeneral.rrcallbak.rxjava.RetryWhenNetworkException;

@@ -21,6 +21,10 @@ public abstract class DX168Subscriber<T> extends Subscriber<DX168Response> {
 
     private Context context;
 
+    public DX168Subscriber() {
+
+    }
+
     public DX168Subscriber(Context applicationContext) {
         this.context = applicationContext.getApplicationContext();
     }
@@ -58,15 +62,23 @@ public abstract class DX168Subscriber<T> extends Subscriber<DX168Response> {
     }
 
     public void onDX168Exception(DX168Exception e) {
-        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+        e.printStackTrace();
+        if (context != null) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onNetworkException(Throwable e) {
-        Toast.makeText(context, "网络较慢，请稍候...", Toast.LENGTH_SHORT).show();
+        if (context != null) {
+            Toast.makeText(context, "网络较慢，请稍候...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onUnknownException(Throwable e) {
-        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+        e.printStackTrace();
+        if (context != null) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

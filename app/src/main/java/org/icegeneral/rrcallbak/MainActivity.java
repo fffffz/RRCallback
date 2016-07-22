@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .retryWhen(new RetryWhenNetworkException())
                 .compose(new DX168Transformer())
                 .lift(new BindActivityOperator(this))
-                .subscribe(new DX168Subscriber<String>(getApplicationContext()) {
+                .subscribe(new DX168Subscriber<String>() {
                     @Override
                     public void onSuccess(String data) {
                         //TODO

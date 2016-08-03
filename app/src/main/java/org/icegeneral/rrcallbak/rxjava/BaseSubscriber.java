@@ -4,8 +4,6 @@ import android.content.Context;
 import android.widget.Toast;
 
 import org.icegeneral.rrcallbak.retrofit.DX168Exception;
-import org.icegeneral.rrcallbak.retrofit.DX168Response;
-import org.json.JSONObject;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -14,18 +12,18 @@ import java.util.concurrent.TimeoutException;
 import rx.Subscriber;
 
 /**
- * Created by iceGeneral on 16/7/14.
+ * Created by jianjun.lin on 16/7/14.
  */
 
-public abstract class DX168Subscriber<T> extends Subscriber<DX168Response> {
+public abstract class BaseSubscriber<T> extends Subscriber<T> {
 
-    private Context context;
+    protected Context context;
 
-    public DX168Subscriber() {
+    public BaseSubscriber() {
 
     }
 
-    public DX168Subscriber(Context applicationContext) {
+    public BaseSubscriber(Context applicationContext) {
         this.context = applicationContext.getApplicationContext();
     }
 
@@ -46,15 +44,8 @@ public abstract class DX168Subscriber<T> extends Subscriber<DX168Response> {
     }
 
     @Override
-    public void onNext(DX168Response dx168Response) {
-        Object data = dx168Response.getData();
-        if (data == JSONObject.NULL) {
-            data = null;
-        }
-        onSuccess((T) data);
-    }
+    public abstract void onNext(T t);
 
-    public abstract void onSuccess(T data);
 
     @Override
     public void onCompleted() {

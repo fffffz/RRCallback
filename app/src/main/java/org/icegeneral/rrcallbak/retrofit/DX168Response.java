@@ -4,7 +4,7 @@ package org.icegeneral.rrcallbak.retrofit;
  * Created by iceGeneral on 16/7/14.
  */
 
-public class DX168Response {
+public class DX168Response<T> {
 
     private int code = -1;
 
@@ -26,8 +26,11 @@ public class DX168Response {
         return msg;
     }
 
-    public Object getData() {
-        return data;
+    public T getData() {
+        if (data == null) {
+            return null;
+        }
+        return (T) data;
     }
 
     @Override

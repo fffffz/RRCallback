@@ -24,24 +24,27 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        List<SubscriberWrapper> removeList = new ArrayList<>();
         for (SubscriberWrapper wrapper : subscribers) {
             if (wrapper.unsubscribeOn == ActivityLifecycle.OnDestroy) {
                 wrapper.subscriber.unsubscribe();
-                subscribers.remove(wrapper);
+                removeList.add(wrapper);
             }
         }
-        super.onDestroy();
+        subscribers.removeAll(removeList);
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
+        List<SubscriberWrapper> removeList = new ArrayList<>();
         for (SubscriberWrapper wrapper : subscribers) {
             if (wrapper.unsubscribeOn == ActivityLifecycle.OnStop) {
                 wrapper.subscriber.unsubscribe();
-                subscribers.remove(wrapper);
+                removeList.add(wrapper);
             }
         }
+        subscribers.removeAll(removeList);
         super.onStop();
     }
 

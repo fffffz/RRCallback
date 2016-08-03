@@ -5,7 +5,8 @@ import android.view.View;
 
 import org.icegeneral.rrcallbak.bean.User;
 import org.icegeneral.rrcallbak.retrofit.DX168API;
-import org.icegeneral.rrcallbak.rxjava.DX168Subscriber;
+import org.icegeneral.rrcallbak.retrofit.DX168Response;
+import org.icegeneral.rrcallbak.rxjava.BaseSubscriber;
 import org.icegeneral.rrcallbak.rxjava.BindActivityOperator;
 import org.icegeneral.rrcallbak.rxjava.DX168Transformer;
 import org.icegeneral.rrcallbak.rxjava.RetryWhenNetworkException;
@@ -25,10 +26,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .retryWhen(new RetryWhenNetworkException())
                 .compose(new DX168Transformer())
                 .lift(new BindActivityOperator(this))
-                .subscribe(new DX168Subscriber<User>(getApplicationContext()) {
+                .subscribe(new BaseSubscriber<User>(getApplicationContext()) {
                     @Override
-                    public void onSuccess(User user) {
-                        //TODO
+                    public void onNext(User user) {
+
                     }
                 });
 
@@ -38,12 +39,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .retryWhen(new RetryWhenNetworkException())
                 .compose(new DX168Transformer())
                 .lift(new BindActivityOperator(this))
-                .subscribe(new DX168Subscriber<String>() {
+                .subscribe(new BaseSubscriber<DX168Response<String>>() {
                     @Override
-                    public void onSuccess(String data) {
-                        //TODO
-                        // data就是verifyCode
+                    public void onNext(DX168Response<String> dx168Response) {
+
                     }
                 });
+
     }
 }

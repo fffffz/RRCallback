@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.icegeneral.rrcallbak.rxjava.ActivityLifecycle;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import rx.Subscriber;
@@ -24,37 +25,34 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        List<SubscriberWrapper> removeList = new ArrayList<>();
-        for (SubscriberWrapper wrapper : subscribers) {
-            if (wrapper.unsubscribeOn == ActivityLifecycle.OnDestroy) {
-                wrapper.subscriber.unsubscribe();
-                removeList.add(wrapper);
+        Iterator<SubscriberWrapper> it = subscribers.iterator();
+        while (it.hasNext()) {
+            SubscriberWrapper subscriberWrapper = it.next();
+            if (subscriberWrapper.unsubscribeOn == ActivityLifecycle.OnDestroy) {
+                subscriberWrapper.subscriber.unsubscribe();
+                it.remove();
             }
         }
-        subscribers.removeAll(removeList);
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
-        List<SubscriberWrapper> removeList = new ArrayList<>();
-        for (SubscriberWrapper wrapper : subscribers) {
-            if (wrapper.unsubscribeOn == ActivityLifecycle.OnStop) {
-                wrapper.subscriber.unsubscribe();
-                removeList.add(wrapper);
+        Iterator<SubscriberWrapper> it = subscribers.iterator();
+        while (it.hasNext()) {
+            SubscriberWrapper subscriberWrapper = it.next();
+            if (subscriberWrapper.unsubscribeOn == ActivityLifecycle.OnStop) {
+                subscriberWrapper.subscriber.unsubscribe();
+                it.remove();
             }
         }
-        subscribers.removeAll(removeList);
         super.onStop();
     }
 
 
-    private List<SubscriberWrapper> subscribers;
+    private List<SubscriberWrapper> subscribers = new LinkedList<>();
 
     public void addSubscriber(Subscriber subscriber, ActivityLifecycle unsubscribeOn) {
-        if (subscribers == null) {
-            subscribers = new ArrayList<>();
-        }
         subscribers.add(new SubscriberWrapper(subscriber, unsubscribeOn));
     }
 

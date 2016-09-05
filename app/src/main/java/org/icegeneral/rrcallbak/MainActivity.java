@@ -5,11 +5,11 @@ import android.view.View;
 
 import org.icegeneral.rrcallbak.bean.User;
 import org.icegeneral.rrcallbak.retrofit.DX168API;
-import org.icegeneral.rrcallbak.retrofit.DX168Response;
 import org.icegeneral.rrcallbak.rxjava.BaseSubscriber;
 import org.icegeneral.rrcallbak.rxjava.BindActivityOperator;
 import org.icegeneral.rrcallbak.rxjava.DX168Transformer;
 import org.icegeneral.rrcallbak.rxjava.RetryWhenNetworkException;
+import org.json.JSONObject;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -39,9 +39,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .retryWhen(new RetryWhenNetworkException())
                 .compose(new DX168Transformer())
                 .lift(new BindActivityOperator(this))
-                .subscribe(new BaseSubscriber<DX168Response<String>>() {
+                .subscribe(new BaseSubscriber<JSONObject>() {
                     @Override
-                    public void onNext(DX168Response<String> dx168Response) {
+                    public void onNext(JSONObject jsonObject) {
 
                     }
                 });

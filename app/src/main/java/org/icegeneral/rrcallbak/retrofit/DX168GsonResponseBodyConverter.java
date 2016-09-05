@@ -36,10 +36,6 @@ public class DX168GsonResponseBodyConverter<T> implements Converter<ResponseBody
                 //如果返回结果是JSONObject或者DX168Response则无需经过Gson
                 if (type.toString().equals(JSONObject.class.toString())) {
                     return (T) response;
-                } else if (type.toString().equals(DX168Response.class.toString())) {
-                    Object data = response.opt("data");
-                    DX168Response dx168Response = new DX168Response(code, msg, data);
-                    return (T) dx168Response;
                 } else {
                     return gson.fromJson(value, type);
                 }

@@ -1,6 +1,7 @@
 package org.icegeneral.rrcallbak.retrofit;
 
 import org.icegeneral.rrcallbak.bean.User;
+import org.json.JSONObject;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -18,7 +19,7 @@ public interface DX168Retrofit {
             @Query("password") String password);
 
     @GET("xxx/register/getRegisterVerifyCode")
-    Observable<DX168Response> getRegisterVerifyCode(
+    Observable<JSONObject> getRegisterVerifyCode(
             @Query("phone") String phone);
 
 }

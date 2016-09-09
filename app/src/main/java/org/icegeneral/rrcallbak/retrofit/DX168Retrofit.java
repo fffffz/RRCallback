@@ -22,4 +22,9 @@ public interface DX168Retrofit {
     Observable<JSONObject> getRegisterVerifyCode(
             @Query("phone") String phone);
 
+
+    @GET("xxx/order/get")
+    Observable<DX168Response<JSONObject>> queryOrder(
+            @Query("id") int orderId);
+
 }

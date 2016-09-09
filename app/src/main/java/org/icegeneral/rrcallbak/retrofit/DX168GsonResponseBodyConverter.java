@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import okhttp3.ResponseBody;
@@ -32,13 +33,19 @@ public class DX168GsonResponseBodyConverter<T> implements Converter<ResponseBody
             JSONObject response = new JSONObject(value);
             int code = response.optInt("code");
             String msg = response.optString("msg");
-            if (code == DX168API.RESULT_OK) {
+            if (type instanceof ParameterizedType && code == DX168API.RESULT_OK) {
                 //如果返回结果是JSONObject或者DX168Response则无需经过Gson
-                if (type.toString().equals(JSONObject.class.toString())) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                if (parameterizedType.getRawType() == JSONObject.class) {
                     return (T) response;
-                } else {
-                    return gson.fromJson(value, type);
+                } else if (parameterizedType.getRawType() == DX168Response.class) {
+                    String data = response.optString("data");
+                    Type dataType = parameterizedType.getActualTypeArguments()[0];
+                    if (dataType == JSONObject.class) {
+                        return (T) new DX168Response(code, msg, new JSONObject(data));
+                    }
                 }
+                return gson.fromJson(value, type);
             } else {
                 //返回的code不是RESULT_OK时Toast显示msg
                 throw new DX168Exception(code, msg, value);

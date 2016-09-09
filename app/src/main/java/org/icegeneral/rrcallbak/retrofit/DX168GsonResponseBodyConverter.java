@@ -33,23 +33,29 @@ public class DX168GsonResponseBodyConverter<T> implements Converter<ResponseBody
             JSONObject response = new JSONObject(value);
             int code = response.optInt("code");
             String msg = response.optString("msg");
-            if (type instanceof ParameterizedType && code == DX168API.RESULT_OK) {
-                //如果返回结果是JSONObject或者DX168Response则无需经过Gson
-                ParameterizedType parameterizedType = (ParameterizedType) type;
-                if (parameterizedType.getRawType() == JSONObject.class) {
+            if (code != DX168API.RESULT_OK) {
+                //返回的code不是RESULT_OK时Toast显示msg
+                throw new DX168Exception(code, msg, value);
+            }
+            if (type instanceof Class) {
+                if (type == String.class) {
+                    return (T) value;
+                }
+                if (type == JSONObject.class) {
+                    //如果返回结果是JSONObject则无需经过Gson
                     return (T) response;
-                } else if (parameterizedType.getRawType() == DX168Response.class) {
+                }
+            } else if (type instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                if (parameterizedType.getRawType() == DX168Response.class) {
                     String data = response.optString("data");
                     Type dataType = parameterizedType.getActualTypeArguments()[0];
                     if (dataType == JSONObject.class) {
                         return (T) new DX168Response(code, msg, new JSONObject(data));
                     }
                 }
-                return gson.fromJson(value, type);
-            } else {
-                //返回的code不是RESULT_OK时Toast显示msg
-                throw new DX168Exception(code, msg, value);
             }
+            return gson.fromJson(value, type);
         } catch (JSONException e) {
             //服务端返回的不是JSON，服务端出问题
             throw new DX168Exception(-1, "", value);
